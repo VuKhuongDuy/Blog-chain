@@ -64,3 +64,9 @@ func (k Keeper) GetPost(ctx sdk.Context, id uint64) (val types.Post, found bool)
 	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
+
+func (k Keeper) RemovePost(ctx sdk.Context, id uint64) {
+	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	store := prefix.NewStore(storeAdapter, types.KeyPrefix(types.PostKey))
+	store.Delete(GetPostIDBytes(id))
+}
